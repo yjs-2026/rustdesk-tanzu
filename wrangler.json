@@ -1,15 +1,13 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "rustdesk-for-cloudflare-worker",
+	"name": "rustdesk-tanzu",
 	"main": "src/index.ts",
 	"compatibility_date": "2026-08-31",
 	"compatibility_flags": ["nodejs_compat"],
 	"vars": {
 		"DO_LOCATION_HINT": "apac"
 	},
-	"routes": [
-		{ "pattern": "rust.limefinance.org", "custom_domain": true }
-	],
+	"routes": [],
 	"upload_source_maps": true,
 	"migrations": [
 		{
