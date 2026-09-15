@@ -647,21 +647,29 @@ export class Hbbs extends DurableObject<WorkerEnv> {
 			return
 		}
 
-		switch (msg.union?.oneofKind) {
-			case 'registerPk':
-				this.handleRegisterPk(msg.union.registerPk, ws)
-				break
-			case 'onlineRequest':
-				this.handleOnlineRequest(msg.union.onlineRequest, ws)
-				break
-			case 'punchHoleRequest':
-				await this.handlePunchHoleRequest(msg.union.punchHoleRequest, ws)
-				break
-			case 'relayResponse':
-				this.handleRelayResponse(msg.union.relayResponse, ws)
-				break
-			default:
-				closeSocket(ws, 1003, 'unsupported rendezvous message')
+		try {
+			switch (msg.union?.oneofKind) {
+				case 'registerPk':
+					this.handleRegisterPk(msg.union.registerPk, ws)
+					break
+				case 'onlineRequest':
+					this.handleOnlineRequest(msg.union.onlineRequest, ws)
+					break
+				case 'punchHoleRequest':
+					await this.handlePunchHoleRequest(msg.union.punchHoleRequest, ws)
+					break
+				case 'relayResponse':
+					this.handleRelayResponse(msg.union.relayResponse, ws)
+					break
+				default:
+					closeSocket(ws, 1003, 'unsupported rendezvous message')
+			}
+		} catch (error) {
+			logEvent('rendezvous handler threw', {
+				error: error instanceof Error ? error.message : String(error),
+				stack: error instanceof Error ? (error.stack ?? '') : '',
+			})
+			closeSocket(ws, 1011, 'handler error')
 		}
 	}
 
